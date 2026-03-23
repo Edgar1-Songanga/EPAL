@@ -1,52 +1,10 @@
-<script>
-  // FUNCIONÁRIOS
-  let funcionarios = [
-    {nome:"Edgar Songanga", cargo:"CEO", avatar:"https://images.unsplash.com/photo-1603415526960-f9e5e55f2ec6?auto=format&fit=crop&w=80&q=80", departamento:"Gestão"},
-    {nome:"Jeniusa Prata", cargo:"Diretora de Projetos", avatar:"https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=80&q=81", departamento:"TI"},
-    {nome:"Miguel Santos", cargo:"Engenheiro de Redes", avatar:"https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=80&q=82", departamento:"Operações"}
-  ];
-
-  // CLIENTES
-  let clientes = [
-    {nome:"João Manuel", tipo:"Residencial", bairro:"Talatona", avatar:"https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=80&q=80"},
-    {nome:"Maria Silva", tipo:"Residencial", bairro:"Kilamba", avatar:"https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=80&q=81"},
-    {nome:"Empresa ABC", tipo:"Institucional", bairro:"Viana", avatar:"https://images.unsplash.com/photo-1603415526960-f9e5e55f2ec6?auto=format&fit=crop&w=80&q=80"}
-  ];
-
-  // FINANCEIRO
-  let financeiro = [
-    {titulo:"Receita Mensal", valor:"120M Kz"},
-    {titulo:"Perdas", valor:"35M Kz"},
-    {titulo:"Cobrança Digital", valor:"65%"}
-  ];
-
-  // RECLAMAÇÕES
-  let reclamacoes = [
-    {msg:"Falta de água há 3 dias", status:"Pendente"},
-    {msg:"Fuga na rua principal", status:"Resolvido"}
-  ];
-
-  // CHATBOT
-  let chatLog = [];
-  let chatInput = "";
-  function sendMessage(){
-    if(chatInput.trim() === "") return;
-    chatLog = [...chatLog, {type:"user", text:chatInput}];
-    setTimeout(()=>{
-      chatLog = [...chatLog, {type:"bot", text:"Assistente: Estamos a analisar sua solicitação."}];
-      document.getElementById("chatBody").scrollTop = document.getElementById("chatBody").scrollHeight;
-    },500);
-    chatInput = "";
-  }
-
-  // MAPA SIMULADO
-  let pins = [
-    {bairro:"Talatona", top:"30%", left:"20%"},
-    {bairro:"Viana", top:"60%", left:"75%"},
-    {bairro:"Kilamba", top:"45%", left:"50%"}
-  ];
-</script>
-
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EPAL Digital Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
 body {margin:0;font-family:'Inter',sans-serif;background:#0b0f14;color:white;overflow-x:hidden;}
 header {position:fixed;width:100%;background:rgba(0,0,0,0.7);backdrop-filter: blur(12px);display:flex;justify-content:space-between;padding:20px 40px;z-index:10;align-items:center;box-shadow:0 2px 20px rgba(0,0,0,0.5);}
@@ -82,6 +40,8 @@ nav a:hover {color:#00ffcc;}
 footer {text-align:center;padding:25px;color:#66cccc;font-size:14px;border-top:1px solid #222;}
 @media(max-width:768px){.grid{grid-template-columns:1fr}.hero h1{font-size:36px}.section{padding:60px 20px;}}
 </style>
+</head>
+<body>
 
 <header>
   <div><strong>EPAL</strong></div>
@@ -103,78 +63,141 @@ footer {text-align:center;padding:25px;color:#66cccc;font-size:14px;border-top:1
 
 <section class="section" id="funcionarios">
   <h2>Funcionários</h2>
-  <div class="grid">
-    {#each funcionarios as f}
-      <div class="card">
-        <img src={f.avatar} class="avatar" alt="Avatar"/>
-        <h3>{f.nome}</h3>
-        <p>{f.cargo} | {f.departamento}</p>
-        <span class="status Ativo">Ativo</span>
-      </div>
-    {/each}
-  </div>
+  <div class="grid" id="funcionariosGrid"></div>
 </section>
 
 <section class="section" id="clientes">
   <h2>Clientes</h2>
-  <div class="grid">
-    {#each clientes as c}
-      <div class="card">
-        <img src={c.avatar} class="avatar" alt="Avatar"/>
-        <h3>{c.nome}</h3>
-        <p>{c.tipo} | {c.bairro}</p>
-        <span class="status Ativo">Ativo</span>
-      </div>
-    {/each}
-  </div>
+  <div class="grid" id="clientesGrid"></div>
 </section>
 
 <section class="section" id="mapa">
   <h2>Mapa Interativo</h2>
-  <div class="map">
-    {#each pins as p}
-      <div class="pin" style="top:{p.top};left:{p.left}" on:click={()=>alert(`Zona: ${p.bairro} com abastecimento ativo`)} title={p.bairro}></div>
-    {/each}
-  </div>
+  <div class="map" id="map"></div>
 </section>
 
 <section class="section" id="financeiro">
   <h2>Simulação Financeira</h2>
-  <div class="grid">
-    {#each financeiro as f}
-      <div class="card">
-        <h3>{f.titulo}</h3>
-        <p>{f.valor}</p>
-      </div>
-    {/each}
-  </div>
+  <div class="grid" id="financeiroGrid"></div>
 </section>
 
 <section class="section" id="reclamacoes">
   <h2>Reclamações</h2>
-  <div class="grid">
-    {#each reclamacoes as r}
-      <div class="card">
-        <p>{r.msg}</p>
-        <p>Status: {r.status}</p>
-      </div>
-    {/each}
-  </div>
+  <div class="grid" id="reclamacoesGrid"></div>
 </section>
 
 <div class="chatbot">
   <div class="chat-header">Assistente Virtual</div>
-  <div class="chat-body" id="chatBody">
-    {#each chatLog as msg}
-      <div class="bubble {msg.type}">{msg.text}</div>
-    {/each}
-  </div>
+  <div class="chat-body" id="chatBody"></div>
   <div class="chat-input">
-    <input type="text" bind:value={chatInput} placeholder="Digite..."/>
-    <button on:click={sendMessage}>Enviar</button>
+    <input id="chatInput" placeholder="Digite..."/>
+    <button id="sendBtn">Enviar</button>
   </div>
 </div>
 
 <footer>
   Powered by <strong>Magestade Pura Digital</strong>
-  </footer>
+</footer>
+
+<script>
+// Dados
+const funcionarios = [
+  {nome:"Edgar Songanga", cargo:"CEO", avatar:"https://images.unsplash.com/photo-1603415526960-f9e5e55f2ec6?auto=format&fit=crop&w=80&q=80", departamento:"Gestão"},
+  {nome:"Jeniusa Prata", cargo:"Diretora de Projetos", avatar:"https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=80&q=81", departamento:"TI"},
+  {nome:"Miguel Santos", cargo:"Engenheiro de Redes", avatar:"https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&w=80&q=82", departamento:"Operações"}
+];
+const clientes = [
+  {nome:"João Manuel", tipo:"Residencial", bairro:"Talatona", avatar:"https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&w=80&q=80"},
+  {nome:"Maria Silva", tipo:"Residencial", bairro:"Kilamba", avatar:"https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&w=80&q=81"},
+  {nome:"Empresa ABC", tipo:"Institucional", bairro:"Viana", avatar:"https://images.unsplash.com/photo-1603415526960-f9e5e55f2ec6?auto=format&w=80&q=80"}
+];
+const financeiro = [
+  {titulo:"Receita Mensal", valor:"120M Kz"},
+  {titulo:"Perdas", valor:"35M Kz"},
+  {titulo:"Cobrança Digital", valor:"65%"}
+];
+const reclamacoes = [
+  {msg:"Falta de água há 3 dias", status:"Pendente"},
+  {msg:"Fuga na rua principal", status:"Resolvido"}
+];
+const pins = [
+  {bairro:"Talatona", top:"30%", left:"20%"},
+  {bairro:"Viana", top:"60%", left:"75%"},
+  {bairro:"Kilamba", top:"45%", left:"50%"}
+];
+
+// Renderização
+const fGrid = document.getElementById("funcionariosGrid");
+funcionarios.forEach(f=>{
+  const div = document.createElement("div");
+  div.className="card";
+  div.innerHTML = `<img src="${f.avatar}" class="avatar" alt="Avatar"/>
+                   <h3>${f.nome}</h3>
+                   <p>${f.cargo} | ${f.departamento}</p>
+                   <span class="status Ativo">Ativo</span>`;
+  fGrid.appendChild(div);
+});
+const cGrid = document.getElementById("clientesGrid");
+clientes.forEach(c=>{
+  const div = document.createElement("div");
+  div.className="card";
+  div.innerHTML = `<img src="${c.avatar}" class="avatar" alt="Avatar"/>
+                   <h3>${c.nome}</h3>
+                   <p>${c.tipo} | ${c.bairro}</p>
+                   <span class="status Ativo">Ativo</span>`;
+  cGrid.appendChild(div);
+});
+const finGrid = document.getElementById("financeiroGrid");
+financeiro.forEach(f=>{
+  const div = document.createElement("div");
+  div.className="card";
+  div.innerHTML = `<h3>${f.titulo}</h3><p>${f.valor}</p>`;
+  finGrid.appendChild(div);
+});
+const recGrid = document.getElementById("reclamacoesGrid");
+reclamacoes.forEach(r=>{
+  const div = document.createElement("div");
+  div.className="card";
+  div.innerHTML = `<p>${r.msg}</p><p>Status: ${r.status}</p>`;
+  recGrid.appendChild(div);
+});
+const mapDiv = document.getElementById("map");
+pins.forEach(p=>{
+  const pin = document.createElement("div");
+  pin.className="pin";
+  pin.style.top=p.top;
+  pin.style.left=p.left;
+  pin.title=p.bairro;
+  pin.onclick=()=>alert(`Zona: ${p.bairro} com abastecimento ativo`);
+  mapDiv.appendChild(pin);
+});
+
+// Chat
+const chatBody = document.getElementById("chatBody");
+let chatLog = [];
+document.getElementById("sendBtn").addEventListener("click",()=>{
+  const input = document.getElementById("chatInput");
+  if(input.value.trim()==="") return;
+  chatLog.push({type:"user", text:"Você: "+input.value});
+  renderChat();
+  setTimeout(()=>{
+    chatLog.push({type:"bot", text:"Assistente: Estamos a analisar sua solicitação."});
+    renderChat();
+    chatBody.scrollTop = chatBody.scrollHeight;
+  },500);
+  input.value="";
+});
+function renderChat(){
+  chatBody.innerHTML="";
+  chatLog.forEach(m=>{
+    const div = document.createElement("div");
+    div.className="bubble "+m.type;
+    div.textContent=m.text;
+    chatBody.appendChild(div);
+  });
+  chatBody.scrollTop = chatBody.scrollHeight;
+}
+</script>
+
+</body>
+</html>
