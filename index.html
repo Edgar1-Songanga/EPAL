@@ -3,199 +3,297 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>EPAL Digital Platform</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<!-- LEAFLET -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
 <style>
-body {margin:0;font-family:'Inter',sans-serif;background:#0b0f14;color:white;overflow-x:hidden;}
-header {position:fixed;width:100%;background:rgba(0,0,0,0.7);backdrop-filter: blur(12px);display:flex;justify-content:space-between;padding:20px 40px;z-index:10;align-items:center;box-shadow:0 2px 20px rgba(0,0,0,0.5);}
-nav a {margin:0 15px;color:#aaa;text-decoration:none;transition:0.3s;}
-nav a:hover {color:#00ffcc;}
-.hero {height:80vh;display:flex;align-items:center;padding:0 40px;background:linear-gradient(rgba(0,40,80,0.5), rgba(0,40,80,0.5)), url('https://images.unsplash.com/photo-1581091215363-0b593b9a1e9f?auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;position:relative;overflow:hidden;}
-.hero div {position:relative; z-index:1;}
-.hero h1 {font-size:48px;margin-bottom:10px;text-shadow:2px 2px 12px rgba(0,0,0,0.8);}
-.hero p {font-size:18px;color:#ccc;text-shadow:1px 1px 10px rgba(0,0,0,0.7);}
-.section {padding:80px 40px;background:#0b0f14;}
-.grid {display:grid;grid-template-columns: repeat(auto-fit,minmax(250px,1fr));gap:25px;}
-.card {background:rgba(15,25,40,0.95); padding:25px; border-radius:18px; transition:0.5s; cursor:pointer; box-shadow:0 8px 25px rgba(0,0,0,0.7); border:1px solid rgba(0,255,204,0.3); backdrop-filter:blur(6px);}
-.card:hover {transform:translateY(-10px) scale(1.05);background:rgba(20,35,55,0.95);}
-.avatar {width:60px;height:60px;border-radius:50%;margin-bottom:15px;border:2px solid #00ffcc;}
-.status {display:inline-block;padding:6px 12px;border-radius:16px;font-size:12px;font-weight:bold;margin-top:10px;}
-.status.Ativo {background:#00ffcc;color:#000;animation:pulse 2s infinite;}
-.status.Intermitente {background:#ffcc00;color:#000;animation:blink 1.5s infinite;}
-@keyframes pulse {0%{transform:scale(1);}50%{transform:scale(1.2);}100%{transform:scale(1);}}
-@keyframes blink {0%,50%,100%{opacity:1;}25%,75%{opacity:0.5;}}
-.map {height:400px;background:url('https://images.unsplash.com/photo-1596496059148-073b08cc1cf5?auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;border-radius:20px;position:relative;box-shadow:0 8px 25px rgba(0,0,0,0.5);}
-.pin {position:absolute;width:20px;height:20px;border-radius:50%;background:#00ffcc;cursor:pointer;animation:pinPulse 2s infinite;box-shadow:0 0 12px #00ffcc;}
-@keyframes pinPulse {0%{transform:scale(1);}50%{transform:scale(1.5);}100%{transform:scale(1);}}
-.chatbot {position:fixed;bottom:20px;right:20px;width:320px;background:rgba(15,20,30,0.95);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 10px 30px rgba(0,0,0,0.8);}
-.chat-header {background:#007aff;padding:12px;font-weight:bold;text-align:center;font-size:16px;letter-spacing:0.5px;}
-.chat-body {height:280px;overflow:auto;padding:12px;display:flex;flex-direction:column;}
-.bubble {padding:12px 18px;border-radius:20px;margin:8px 0;max-width:78%;word-wrap:break-word;opacity:0;animation:fadeSlide 0.5s forwards;}
-.bubble.user {background:#007aff;color:white;align-self:flex-end;}
-.bubble.bot {background:#222;color:#00ffcc;align-self:flex-start;}
-@keyframes fadeSlide {0%{opacity:0;transform:translateY(20px);}100%{opacity:1;transform:translateY(0);}}
-.chat-input {display:flex;border-top:1px solid #333;}
-.chat-input input {flex:1;padding:12px;border:none;background:#111;color:white;border-radius:0;}
-.chat-input button {background:#007aff;border:none;color:white;padding:12px 16px;cursor:pointer;border-radius:0;}
-footer {text-align:center;padding:25px;color:#66cccc;font-size:14px;border-top:1px solid #222;}
-@media(max-width:768px){.grid{grid-template-columns:1fr}.hero h1{font-size:36px}.section{padding:60px 20px;}}
+body{
+  margin:0;
+  font-family:'Inter',sans-serif;
+  background:#0b0f14;
+  color:white;
+  display:flex;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:260px;
+  background:rgba(10,15,20,0.95);
+  backdrop-filter: blur(15px);
+  height:100vh;
+  padding:20px;
+  position:fixed;
+}
+.sidebar h2{
+  color:#00ffcc;
+}
+.sidebar a{
+  display:block;
+  margin:15px 0;
+  color:#aaa;
+  text-decoration:none;
+  transition:0.3s;
+}
+.sidebar a:hover{
+  color:#00ffcc;
+  transform:translateX(5px);
+}
+
+/* MAIN */
+.main{
+  margin-left:260px;
+  width:100%;
+}
+
+/* TOPBAR */
+.topbar{
+  background:rgba(0,0,0,0.6);
+  backdrop-filter: blur(10px);
+  padding:15px 30px;
+  display:flex;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+
+/* HERO */
+.hero{
+  height:60vh;
+  background:linear-gradient(rgba(0,40,80,0.5), rgba(0,40,80,0.6)),
+  url('https://images.unsplash.com/photo-1581091215363-0b593b9a1e9f?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+  display:flex;
+  align-items:center;
+  padding:40px;
+}
+.hero h1{
+  font-size:42px;
+}
+
+/* SECTION */
+.section{
+  padding:60px 30px;
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+}
+
+/* CARD */
+.card{
+  background:rgba(20,30,45,0.9);
+  border-radius:16px;
+  padding:20px;
+  backdrop-filter: blur(10px);
+  transition:0.4s;
+}
+.card:hover{
+  transform:translateY(-10px) scale(1.03);
+}
+
+/* AVATAR */
+.avatar{
+  width:60px;
+  height:60px;
+  border-radius:50%;
+}
+
+/* MAP */
+#map{
+  height:400px;
+  border-radius:16px;
+}
+
+/* CHATBOT */
+.chatbot{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:320px;
+  background:#111;
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 10px 40px rgba(0,0,0,0.7);
+}
+
+.chat-header{
+  background:#007aff;
+  padding:10px;
+  text-align:center;
+}
+
+.chat-body{
+  height:250px;
+  overflow:auto;
+  padding:10px;
+}
+
+.msg{
+  margin:8px 0;
+  padding:10px;
+  border-radius:14px;
+  max-width:70%;
+}
+.user{background:#007aff;margin-left:auto;}
+.bot{background:#222;color:#00ffcc;}
+
+.chat-input{
+  display:flex;
+}
+.chat-input input{
+  flex:1;
+  padding:10px;
+  border:none;
+  background:#111;
+  color:white;
+}
+.chat-input button{
+  background:#007aff;
+  border:none;
+  color:white;
+  padding:10px;
+}
 </style>
 </head>
+
 <body>
 
-<header>
-  <div><strong>EPAL</strong></div>
-  <nav>
-    <a href="#funcionarios">Funcionários</a>
-    <a href="#clientes">Clientes</a>
-    <a href="#mapa">Mapa</a>
-    <a href="#financeiro">Financeiro</a>
-    <a href="#reclamacoes">Reclamações</a>
-  </nav>
-</header>
-
-<section class="hero">
-  <div>
-    <h1>Infraestrutura Digital da Água</h1>
-    <p>Transformação completa do sistema de abastecimento em Luanda</p>
-  </div>
-</section>
-
-<section class="section" id="funcionarios">
-  <h2>Funcionários</h2>
-  <div class="grid" id="funcionariosGrid"></div>
-</section>
-
-<section class="section" id="clientes">
-  <h2>Clientes</h2>
-  <div class="grid" id="clientesGrid"></div>
-</section>
-
-<section class="section" id="mapa">
-  <h2>Mapa Interativo</h2>
-  <div class="map" id="map"></div>
-</section>
-
-<section class="section" id="financeiro">
-  <h2>Simulação Financeira</h2>
-  <div class="grid" id="financeiroGrid"></div>
-</section>
-
-<section class="section" id="reclamacoes">
-  <h2>Reclamações</h2>
-  <div class="grid" id="reclamacoesGrid"></div>
-</section>
-
-<div class="chatbot">
-  <div class="chat-header">Assistente Virtual</div>
-  <div class="chat-body" id="chatBody"></div>
-  <div class="chat-input">
-    <input id="chatInput" placeholder="Digite..."/>
-    <button id="sendBtn">Enviar</button>
-  </div>
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>EPAL</h2>
+  <a href="#funcionarios">Funcionários</a>
+  <a href="#clientes">Clientes</a>
+  <a href="#mapa">Mapa</a>
+  <a href="#financeiro">Financeiro</a>
 </div>
 
-<footer>
-  Powered by <strong>Magestade Pura Digital</strong>
-</footer>
+<!-- MAIN -->
+<div class="main">
+
+<div class="topbar">
+  <div>Infraestrutura Digital</div>
+  <div>Powered by Magestade Pura Digital</div>
+</div>
+
+<div class="hero">
+  <h1>Gestão Inteligente de Água em Luanda</h1>
+</div>
+
+<!-- FUNCIONÁRIOS -->
+<div class="section" id="funcionarios">
+<h2>Funcionários</h2>
+<div class="grid" id="funcionariosGrid"></div>
+</div>
+
+<!-- CLIENTES -->
+<div class="section" id="clientes">
+<h2>Clientes</h2>
+<div class="grid" id="clientesGrid"></div>
+</div>
+
+<!-- MAPA REAL -->
+<div class="section" id="mapa">
+<h2>Mapa de Abastecimento</h2>
+<div id="map"></div>
+</div>
+
+</div>
+
+<!-- CHATBOT -->
+<div class="chatbot">
+<div class="chat-header">Assistente EPAL</div>
+<div class="chat-body" id="chatBody"></div>
+<div class="chat-input">
+<input id="input">
+<button onclick="send()">Enviar</button>
+</div>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <script>
-// Dados
-const funcionarios = [
-  {nome:"Edgar Songanga", cargo:"CEO", avatar:"https://images.unsplash.com/photo-1603415526960-f9e5e55f2ec6?auto=format&fit=crop&w=80&q=80", departamento:"Gestão"},
-  {nome:"Jeniusa Prata", cargo:"Diretora de Projetos", avatar:"https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=80&q=81", departamento:"TI"},
-  {nome:"Miguel Santos", cargo:"Engenheiro de Redes", avatar:"https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&w=80&q=82", departamento:"Operações"}
-];
-const clientes = [
-  {nome:"João Manuel", tipo:"Residencial", bairro:"Talatona", avatar:"https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&w=80&q=80"},
-  {nome:"Maria Silva", tipo:"Residencial", bairro:"Kilamba", avatar:"https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&w=80&q=81"},
-  {nome:"Empresa ABC", tipo:"Institucional", bairro:"Viana", avatar:"https://images.unsplash.com/photo-1603415526960-f9e5e55f2ec6?auto=format&w=80&q=80"}
-];
-const financeiro = [
-  {titulo:"Receita Mensal", valor:"120M Kz"},
-  {titulo:"Perdas", valor:"35M Kz"},
-  {titulo:"Cobrança Digital", valor:"65%"}
-];
-const reclamacoes = [
-  {msg:"Falta de água há 3 dias", status:"Pendente"},
-  {msg:"Fuga na rua principal", status:"Resolvido"}
-];
-const pins = [
-  {bairro:"Talatona", top:"30%", left:"20%"},
-  {bairro:"Viana", top:"60%", left:"75%"},
-  {bairro:"Kilamba", top:"45%", left:"50%"}
+// FUNCIONÁRIOS
+const funcionarios=[
+{nome:"Edgar Songanga",cargo:"CEO"},
+{nome:"Jeniusa Prata",cargo:"Diretora"},
+{nome:"Miguel Santos",cargo:"Engenheiro"}
 ];
 
-// Renderização
-const fGrid = document.getElementById("funcionariosGrid");
+const fGrid=document.getElementById("funcionariosGrid");
 funcionarios.forEach(f=>{
-  const div = document.createElement("div");
-  div.className="card";
-  div.innerHTML = `<img src="${f.avatar}" class="avatar" alt="Avatar"/>
-                   <h3>${f.nome}</h3>
-                   <p>${f.cargo} | ${f.departamento}</p>
-                   <span class="status Ativo">Ativo</span>`;
-  fGrid.appendChild(div);
-});
-const cGrid = document.getElementById("clientesGrid");
-clientes.forEach(c=>{
-  const div = document.createElement("div");
-  div.className="card";
-  div.innerHTML = `<img src="${c.avatar}" class="avatar" alt="Avatar"/>
-                   <h3>${c.nome}</h3>
-                   <p>${c.tipo} | ${c.bairro}</p>
-                   <span class="status Ativo">Ativo</span>`;
-  cGrid.appendChild(div);
-});
-const finGrid = document.getElementById("financeiroGrid");
-financeiro.forEach(f=>{
-  const div = document.createElement("div");
-  div.className="card";
-  div.innerHTML = `<h3>${f.titulo}</h3><p>${f.valor}</p>`;
-  finGrid.appendChild(div);
-});
-const recGrid = document.getElementById("reclamacoesGrid");
-reclamacoes.forEach(r=>{
-  const div = document.createElement("div");
-  div.className="card";
-  div.innerHTML = `<p>${r.msg}</p><p>Status: ${r.status}</p>`;
-  recGrid.appendChild(div);
-});
-const mapDiv = document.getElementById("map");
-pins.forEach(p=>{
-  const pin = document.createElement("div");
-  pin.className="pin";
-  pin.style.top=p.top;
-  pin.style.left=p.left;
-  pin.title=p.bairro;
-  pin.onclick=()=>alert(`Zona: ${p.bairro} com abastecimento ativo`);
-  mapDiv.appendChild(pin);
+let div=document.createElement("div");
+div.className="card";
+div.innerHTML=`<img class="avatar" src="https://i.pravatar.cc/60">
+<h3>${f.nome}</h3>
+<p>${f.cargo}</p>`;
+fGrid.appendChild(div);
 });
 
-// Chat
-const chatBody = document.getElementById("chatBody");
-let chatLog = [];
-document.getElementById("sendBtn").addEventListener("click",()=>{
-  const input = document.getElementById("chatInput");
-  if(input.value.trim()==="") return;
-  chatLog.push({type:"user", text:"Você: "+input.value});
-  renderChat();
-  setTimeout(()=>{
-    chatLog.push({type:"bot", text:"Assistente: Estamos a analisar sua solicitação."});
-    renderChat();
-    chatBody.scrollTop = chatBody.scrollHeight;
-  },500);
-  input.value="";
+// CLIENTES
+const clientes=[
+{nome:"João Manuel",bairro:"Talatona"},
+{nome:"Maria Silva",bairro:"Kilamba"},
+{nome:"Empresa ABC",bairro:"Viana"}
+];
+
+const cGrid=document.getElementById("clientesGrid");
+clientes.forEach(c=>{
+let div=document.createElement("div");
+div.className="card";
+div.innerHTML=`<img class="avatar" src="https://i.pravatar.cc/60">
+<h3>${c.nome}</h3>
+<p>${c.bairro}</p>`;
+cGrid.appendChild(div);
 });
-function renderChat(){
-  chatBody.innerHTML="";
-  chatLog.forEach(m=>{
-    const div = document.createElement("div");
-    div.className="bubble "+m.type;
-    div.textContent=m.text;
-    chatBody.appendChild(div);
-  });
-  chatBody.scrollTop = chatBody.scrollHeight;
+
+// MAPA REAL
+const map=L.map('map').setView([-8.8383,13.2344],11);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+maxZoom:19
+}).addTo(map);
+
+// PINS REAIS
+[
+{nome:"Talatona",coords:[-8.919,13.180]},
+{nome:"Viana",coords:[-8.890,13.370]},
+{nome:"Kilamba",coords:[-8.950,13.300]}
+].forEach(p=>{
+L.marker(p.coords).addTo(map)
+.bindPopup(`Zona: ${p.nome}<br>Abastecimento ativo`);
+});
+
+// CHAT
+let chat=[];
+function send(){
+let input=document.getElementById("input");
+if(!input.value) return;
+
+chat.push({type:"user",text:input.value});
+chat.push({type:"bot",text:"Estamos a analisar sua solicitação"});
+
+render();
+input.value="";
+}
+
+function render(){
+let body=document.getElementById("chatBody");
+body.innerHTML="";
+chat.forEach(m=>{
+let d=document.createElement("div");
+d.className="msg "+m.type;
+d.innerText=m.text;
+body.appendChild(d);
+});
+body.scrollTop=body.scrollHeight;
 }
 </script>
 
