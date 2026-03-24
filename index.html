@@ -3,294 +3,244 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>EPAL Experience</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-
+<title>EPAL Digital Ultra Premium</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-body{
-margin:0;
-font-family:'Inter';
-background:linear-gradient(135deg,#0b0f14,#0f1c2b);
-color:white;
-display:flex;
-height:100vh;
-}
+/* Reset e fonte */
+* {margin:0; padding:0; box-sizing:border-box;}
+body {font-family:'Inter',sans-serif; background:#0b0f14; color:white; overflow-x:hidden;}
 
-/* SIDEBAR */
-.sidebar{
-width:240px;
-background:rgba(20,25,35,0.6);
-backdrop-filter:blur(20px);
-padding:20px;
-}
-.sidebar h2{color:#00e0ff}
-.sidebar a{
-display:block;margin:12px 0;
-color:#aaa;cursor:pointer;
-transition:0.3s;
-}
-.sidebar a:hover,.active{color:white}
+/* Header e sidebar */
+header{position:fixed;top:0;left:0;width:100%;height:70px;background:rgba(0,0,0,0.7);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:space-between;padding:0 30px;z-index:1000;box-shadow:0 5px 20px rgba(0,0,0,0.5);}
+header h1{font-weight:700;font-size:24px;color:#00ffcc;}
+nav a{margin:0 15px;color:#aaa;text-decoration:none;transition:0.3s;}
+nav a:hover{color:#00ffcc;}
 
-/* MAIN */
-.main{
-flex:1;
-display:flex;
-flex-direction:column;
-}
+/* Hero */
+.hero{height:90vh;display:flex;align-items:center;justify-content:center;text-align:center;background:url('https://images.unsplash.com/photo-1581091215363-0b593b9a1e9f?auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;position:relative;}
+.hero::after{content:"";position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);}
+.hero div{position:relative; z-index:1;}
+.hero h1{font-size:56px;color:white;text-shadow:2px 2px 20px rgba(0,0,0,0.7); margin-bottom:20px;}
+.hero p{font-size:22px;color:#ccc;text-shadow:1px 1px 12px rgba(0,0,0,0.6);}
 
-/* TOPBAR */
-.topbar{
-padding:15px 20px;
-display:flex;
-justify-content:space-between;
-background:rgba(255,255,255,0.03);
-backdrop-filter:blur(10px);
-}
+/* Sections */
+.section{padding:100px 50px;background:#0b0f14;}
+h2{font-size:32px;margin-bottom:25px;color:#00ffcc;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:25px;}
 
-/* CONTENT */
-.content{
-padding:20px;
-overflow:auto;
-}
+/* Cards */
+.card{background:rgba(20,35,55,0.95);padding:25px;border-radius:18px;transition:0.5s;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,0.7);border:1px solid rgba(0,255,204,0.3);backdrop-filter:blur(6px);}
+.card:hover{transform:translateY(-10px) scale(1.05);background:rgba(25,45,65,0.95);}
+.avatar{width:70px;height:70px;border-radius:50%;margin-bottom:15px;border:2px solid #00ffcc;}
 
-/* GRID */
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:20px;
-}
+/* Status */
+.status{display:inline-block;padding:6px 12px;border-radius:16px;font-size:12px;font-weight:bold;margin-top:10px;}
+.status.Ativo{background:#00ffcc;color:#000;animation:pulse 2s infinite;}
+.status.Intermitente{background:#ffcc00;color:#000;animation:blink 1.5s infinite;}
+@keyframes pulse{0%{transform:scale(1);}50%{transform:scale(1.2);}100%{transform:scale(1);}}
+@keyframes blink{0%,50%,100%{opacity:1;}25%,75%{opacity:0.5;}}
 
-/* CARD */
-.card{
-background:rgba(255,255,255,0.05);
-border-radius:16px;
-padding:20px;
-backdrop-filter:blur(10px);
-transition:0.3s;
-cursor:pointer;
-}
-.card:hover{
-transform:translateY(-5px) scale(1.02);
-}
+/* Mapa */
+.map{height:450px;background:url('https://images.unsplash.com/photo-1596496059148-073b08cc1cf5?auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;border-radius:20px;position:relative;box-shadow:0 10px 30px rgba(0,0,0,0.6);}
+.pin{position:absolute;width:22px;height:22px;border-radius:50%;background:#00ffcc;cursor:pointer;animation:pinPulse 2s infinite;box-shadow:0 0 15px #00ffcc;}
+@keyframes pinPulse{0%{transform:scale(1);}50%{transform:scale(1.5);}100%{transform:scale(1);}}
 
-/* KPI */
-.kpi{
-font-size:28px;
-font-weight:600;
-}
+/* Chat */
+.chatbot{position:fixed;bottom:20px;right:20px;width:320px;background:rgba(15,20,30,0.95);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 10px 35px rgba(0,0,0,0.85);}
+.chat-header{background:#007aff;padding:14px;font-weight:bold;text-align:center;font-size:16px;}
+.chat-body{height:300px;overflow:auto;padding:12px;display:flex;flex-direction:column;}
+.bubble{padding:12px 18px;border-radius:20px;margin:8px 0;max-width:78%;word-wrap:break-word;opacity:0;animation:fadeSlide 0.5s forwards;}
+.bubble.user{background:#007aff;color:white;align-self:flex-end;}
+.bubble.bot{background:#222;color:#00ffcc;align-self:flex-start;}
+@keyframes fadeSlide{0%{opacity:0;transform:translateY(20px);}100%{opacity:1;transform:translateY(0);}}
+.chat-input{display:flex;border-top:1px solid #333;}
+.chat-input input{flex:1;padding:12px;border:none;background:#111;color:white;border-radius:0;}
+.chat-input button{background:#007aff;border:none;color:white;padding:12px 16px;cursor:pointer;border-radius:0;transition:0.3s;}
+.chat-input button:hover{background:#00ffcc;color:#000;}
 
-/* STATUS */
-.status{
-padding:5px 10px;
-border-radius:10px;
-font-size:12px;
-}
-.ok{background:#00ffcc;color:#000}
-.warn{background:#ffcc00;color:#000}
+/* Formulário reclamação */
+form input, form textarea{width:100%;padding:10px;margin:10px 0;border-radius:10px;border:none;outline:none;background:#111;color:white;}
+form button{background:#00ffcc;color:#000;border:none;padding:12px 18px;border-radius:12px;cursor:pointer;transition:0.3s;}
+form button:hover{background:#007aff;color:white;}
 
-/* MODAL */
-.modal{
-position:fixed;
-top:50%;left:50%;
-transform:translate(-50%,-50%);
-background:#111;
-padding:20px;
-border-radius:16px;
-display:none;
-width:320px;
-}
+/* Footer */
+footer{text-align:center;padding:25px;color:#66cccc;font-size:14px;border-top:1px solid #222;}
 
-/* CHAT */
-.chat-btn{
-position:fixed;
-bottom:20px;
-right:20px;
-background:linear-gradient(135deg,#007aff,#00e0ff);
-padding:15px;
-border-radius:50%;
-cursor:pointer;
-box-shadow:0 0 20px rgba(0,122,255,0.5);
-}
-.chat{
-position:fixed;
-bottom:80px;
-right:20px;
-width:320px;
-background:#111;
-border-radius:16px;
-display:none;
-}
-.chat-body{height:220px;overflow:auto;padding:10px}
-.msg{margin:6px;padding:10px;border-radius:12px}
-.user{background:#007aff}
-.bot{background:#222;color:#00e0ff}
-
-/* MAP */
-#map{height:350px;border-radius:12px}
+/* Responsividade */
+@media(max-width:768px){.grid{grid-template-columns:1fr}.hero h1{font-size:36px}.section{padding:60px 20px;}}
 </style>
 </head>
-
 <body>
 
-<div class="sidebar">
-<h2>EPAL</h2>
-<a onclick="show('dashboard',this)">Dashboard</a>
-<a onclick="show('clientes',this)">Clientes</a>
-<a onclick="show('mapa',this)">Mapa</a>
-<a onclick="show('reclamacoes',this)">Reclamações</a>
-<a onclick="show('pagamentos',this)">Pagamentos</a>
-<a onclick="show('analytics',this)">Analytics</a>
+<header>
+<h1>EPAL</h1>
+<nav>
+<a href="#funcionarios">Funcionários</a>
+<a href="#clientes">Clientes</a>
+<a href="#mapa">Mapa</a>
+<a href="#financeiro">Financeiro</a>
+<a href="#reclamacoes">Reclamações</a>
+</nav>
+</header>
+
+<section class="hero">
+<div>
+<h1>Infraestrutura Digital da Água</h1>
+<p>Transformação completa do sistema de abastecimento em Luanda</p>
 </div>
+</section>
 
-<div class="main">
+<section class="section" id="funcionarios">
+<h2>Funcionários</h2>
+<div class="grid" id="funcionariosGrid"></div>
+</section>
 
-<div class="topbar">
-<div>Digital Platform</div>
-<div>Online ●</div>
-</div>
+<section class="section" id="clientes">
+<h2>Clientes</h2>
+<div class="grid" id="clientesGrid"></div>
+</section>
 
-<div class="content" id="content"></div>
+<section class="section" id="mapa">
+<h2>Mapa Interativo</h2>
+<div class="map" id="map"></div>
+</section>
 
-</div>
+<section class="section" id="financeiro">
+<h2>Simulação Financeira</h2>
+<div class="grid" id="financeiroGrid"></div>
+</section>
 
-<div class="modal" id="modal"></div>
+<section class="section" id="reclamacoes">
+<h2>Reclamações</h2>
+<form id="reclamacaoForm">
+<input type="text" id="nomeReclamante" placeholder="Nome">
+<textarea id="mensagemReclamacao" placeholder="Mensagem"></textarea>
+<button type="submit">Enviar Reclamação</button>
+</form>
+<div class="grid" id="reclamacoesGrid"></div>
+</section>
 
-<div class="chat-btn" onclick="toggleChat()">💬</div>
-
-<div class="chat" id="chat">
+<div class="chatbot">
+<div class="chat-header">Assistente Virtual</div>
 <div class="chat-body" id="chatBody"></div>
-<input id="chatInput" placeholder="Pergunte algo..." style="width:70%">
-<button onclick="chat()">></button>
+<div class="chat-input">
+<input id="chatInput" placeholder="Digite..." />
+<button onclick="sendMessage()">Enviar</button>
+</div>
 </div>
 
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<footer>Powered by <strong>Magestade Pura Digital</strong></footer>
 
 <script>
-
-let clientes=[
-{nome:"João Manuel",bairro:"Talatona",consumo:"120L",status:"ok"},
-{nome:"Empresa ABC",bairro:"Viana",consumo:"800L",status:"warn"}
+// Dados simulados
+const funcionarios = [
+{name:"Edgar Songanga", cargo:"CEO", avatar:"https://i.pravatar.cc/80?img=1", departamento:"Gestão"},
+{name:"Jeniusa Prata", cargo:"Diretora de Projetos", avatar:"https://i.pravatar.cc/80?img=2", departamento:"TI"},
+{name:"Miguel Santos", cargo:"Engenheiro de Redes", avatar:"https://i.pravatar.cc/80?img=3", departamento:"Operações"}
 ];
 
-let reclamacoes=[];
+const clientes = [
+{name:"João Manuel", tipo:"Residencial", bairro:"Talatona", avatar:"https://i.pravatar.cc/80?img=4"},
+{name:"Maria Silva", tipo:"Residencial", bairro:"Kilamba", avatar:"https://i.pravatar.cc/80?img=5"},
+{name:"Empresa ABC", tipo:"Institucional", bairro:"Viana", avatar:"https://i.pravatar.cc/80?img=6"}
+];
 
-/* NAV */
-function show(m,el){
-document.querySelectorAll('.sidebar a').forEach(a=>a.classList.remove('active'));
-if(el) el.classList.add('active');
+const financeiro = [
+{titulo:"Receita Mensal", valor:"120M Kz"},
+{titulo:"Perdas", valor:"35M Kz"},
+{titulo:"Cobrança Digital", valor:"65%"}
+];
 
-/* DASHBOARD */
-if(m==="dashboard"){
-content.innerHTML=`
-<h1>Dashboard</h1>
-<div class="grid">
-<div class="card"><div class="kpi">120M Kz</div>Receita</div>
-<div class="card"><div class="kpi">35M Kz</div>Perdas</div>
-<div class="card"><div class="kpi">${clientes.length}</div>Clientes</div>
-</div>`;
-}
+let reclamacoes = [
+{msg:"Falta de água há 3 dias", status:"Pendente"},
+{msg:"Fuga na rua principal", status:"Resolvido"}
+];
 
-/* CLIENTES */
-if(m==="clientes"){
-let html="<h1>Clientes</h1><div class='grid'>";
-clientes.forEach(c=>{
-html+=`
-<div class="card" onclick="perfil('${c.nome}','${c.bairro}','${c.consumo}')">
-<h3>${c.nome}</h3>
-<p>${c.bairro}</p>
-<span class="status ${c.status}">${c.status}</span>
-</div>`;
+const pins = [
+{bairro:"Talatona", top:"30%", left:"20%"},
+{bairro:"Viana", top:"60%", left:"75%"},
+{bairro:"Kilamba", top:"45%", left:"50%"}
+];
+
+// Renderização
+const funcGrid = document.getElementById("funcionariosGrid");
+funcionarios.forEach(f=>{
+let div=document.createElement("div");
+div.className="card";
+div.innerHTML=`<img src="${f.avatar}" class="avatar"/><h3>${f.nome}</h3><p>${f.cargo} | ${f.departamento}</p><span class="status Ativo">Ativo</span>`;
+funcGrid.appendChild(div);
 });
-html+="</div>";
-content.innerHTML=html;
-}
 
-/* MAPA */
-if(m==="mapa"){
-content.innerHTML=`<h1>Mapa Inteligente</h1><div id="map"></div>`;
-setTimeout(()=>{
-let map=L.map('map').setView([-8.83,13.23],11);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+const cliGrid = document.getElementById("clientesGrid");
 clientes.forEach(c=>{
-L.marker([-8.9+Math.random()/10,13.2+Math.random()/10])
-.addTo(map).bindPopup(c.nome);
+let div=document.createElement("div");
+div.className="card";
+div.innerHTML=`<img src="${c.avatar}" class="avatar"/><h3>${c.nome}</h3><p>${c.tipo} | ${c.bairro}</p><span class="status Ativo">Ativo</span>`;
+cliGrid.appendChild(div);
 });
-},100);
+
+const finGrid = document.getElementById("financeiroGrid");
+financeiro.forEach(f=>{
+let div=document.createElement("div");
+div.className="card";
+div.innerHTML=`<h3>${f.titulo}</h3><p>${f.valor}</p>`;
+finGrid.appendChild(div);
+});
+
+const recGrid = document.getElementById("reclamacoesGrid");
+function renderReclamacoes(){
+recGrid.innerHTML="";
+reclamacoes.forEach(r=>{
+let div=document.createElement("div");
+div.className="card";
+div.innerHTML=`<p>${r.msg}</p><p>Status: ${r.status}</p>`;
+recGrid.appendChild(div);
+});
 }
+renderReclamacoes();
 
-/* RECLAMAÇÕES */
-if(m==="reclamacoes"){
-content.innerHTML=`
-<h1>Reclamações</h1>
-<div class="card">
-<input id="nome" placeholder="Nome">
-<input id="bairro" placeholder="Bairro">
-<textarea id="prob"></textarea>
-<button onclick="addRec()">Enviar</button>
-</div>`;
+// Formulário
+document.getElementById("reclamacaoForm").addEventListener("submit",e=>{
+e.preventDefault();
+let nome=document.getElementById("nomeReclamante").value;
+let msg=document.getElementById("mensagemReclamacao").value;
+if(nome && msg){reclamacoes.push({msg:`${nome}: ${msg}`, status:"Pendente"});renderReclamacoes();}
+document.getElementById("nomeReclamante").value="";document.getElementById("mensagemReclamacao").value="";
+});
+
+// Mapa
+const mapEl = document.getElementById("map");
+pins.forEach(p=>{
+let pin=document.createElement("div");
+pin.className="pin";
+pin.style.top=p.top;
+pin.style.left=p.left;
+pin.title=p.bairro;
+pin.onclick=()=>alert(`Zona: ${p.bairro} com abastecimento ativo`);
+mapEl.appendChild(pin);
+});
+
+// Chat
+let chatLog=[];
+function sendMessage(){
+let input=document.getElementById("chatInput");
+if(input.value.trim()==="") return;
+chatLog.push({type:"user", text:input.value});
+renderChat();
+setTimeout(()=>{chatLog.push({type:"bot", text:"Assistente: Estamos a analisar sua solicitação."});renderChat();},700);
+input.value="";
 }
-
-/* PAGAMENTO */
-if(m==="pagamentos"){
-content.innerHTML=`
-<h1>Pagamento</h1>
-<div class="card" onclick="alert('Pagamento efetuado')">
-💳 Pagar Conta
-</div>`;
-}
-
-/* ANALYTICS */
-if(m==="analytics"){
-content.innerHTML=`
-<h1>Analytics</h1>
-<div class="grid">
-<div class="card">Eficiência 78%</div>
-<div class="card">Consumo Médio 120L</div>
-</div>`;
-}
-}
-
-/* PERFIL */
-function perfil(n,b,c){
-modal.innerHTML=`<h2>${n}</h2><p>${b}</p><p>${c}</p>
-<button onclick="modal.style.display='none'">Fechar</button>`;
-modal.style.display="block";
-}
-
-/* RECLAMAÇÃO */
-function addRec(){
-alert("Reclamação enviada com sucesso");
-}
-
-/* CHAT */
-function toggleChat(){
-chat.style.display=chat.style.display==="none"?"block":"none";
-}
-
-function chat(){
-let txt=chatInput.value;
-addMsg(txt,'user');
-
-setTimeout(()=>{
-addMsg("Estamos a verificar sua solicitação.","bot");
-},600);
-
-chatInput.value="";
-}
-
-function addMsg(t,type){
-let d=document.createElement("div");
-d.className="msg "+type;
-d.innerText=t;
-chatBody.appendChild(d);
+function renderChat(){
+const chatBody=document.getElementById("chatBody");
+chatBody.innerHTML="";
+chatLog.forEach(msg=>{
+let div=document.createElement("div");
+div.className="bubble "+msg.type;
+div.textContent=msg.text;
+chatBody.appendChild(div);
+});
 chatBody.scrollTop=chatBody.scrollHeight;
 }
-
-show('dashboard');
-
 </script>
 
 </body>
