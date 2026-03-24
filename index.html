@@ -3,73 +3,133 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EPAL Digital Platform</title>
+
+<title>EPAL Experience</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
 <style>
-body{margin:0;font-family:'Inter';background:#0b0f14;color:white;display:flex;height:100vh}
+body{
+margin:0;
+font-family:'Inter';
+background:linear-gradient(135deg,#0b0f14,#0f1c2b);
+color:white;
+display:flex;
+height:100vh;
+}
 
 /* SIDEBAR */
-.sidebar{width:260px;background:#0f1720;padding:20px}
-.sidebar h2{color:#00ffcc}
-.sidebar a{display:block;margin:12px 0;color:#aaa;cursor:pointer}
-.sidebar a.active{color:#00ffcc}
+.sidebar{
+width:240px;
+background:rgba(20,25,35,0.6);
+backdrop-filter:blur(20px);
+padding:20px;
+}
+.sidebar h2{color:#00e0ff}
+.sidebar a{
+display:block;margin:12px 0;
+color:#aaa;cursor:pointer;
+transition:0.3s;
+}
+.sidebar a:hover,.active{color:white}
 
 /* MAIN */
-.main{flex:1;display:flex;flex-direction:column}
+.main{
+flex:1;
+display:flex;
+flex-direction:column;
+}
 
 /* TOPBAR */
 .topbar{
-background:#111827;padding:15px;
-display:flex;justify-content:space-between
+padding:15px 20px;
+display:flex;
+justify-content:space-between;
+background:rgba(255,255,255,0.03);
+backdrop-filter:blur(10px);
 }
 
 /* CONTENT */
-.content{padding:20px;overflow:auto}
+.content{
+padding:20px;
+overflow:auto;
+}
 
 /* GRID */
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
 
 /* CARD */
 .card{
-background:#111827;padding:20px;border-radius:12px;
-cursor:pointer;transition:0.3s
+background:rgba(255,255,255,0.05);
+border-radius:16px;
+padding:20px;
+backdrop-filter:blur(10px);
+transition:0.3s;
+cursor:pointer;
 }
-.card:hover{transform:scale(1.03)}
+.card:hover{
+transform:translateY(-5px) scale(1.02);
+}
+
+/* KPI */
+.kpi{
+font-size:28px;
+font-weight:600;
+}
 
 /* STATUS */
-.status{padding:4px 10px;border-radius:8px;font-size:12px}
-.ok{background:#00ffcc;color:black}
-.warn{background:#ffcc00;color:black}
-.bad{background:#ff4d4d}
+.status{
+padding:5px 10px;
+border-radius:10px;
+font-size:12px;
+}
+.ok{background:#00ffcc;color:#000}
+.warn{background:#ffcc00;color:#000}
 
 /* MODAL */
 .modal{
-position:fixed;top:50%;left:50%;
+position:fixed;
+top:50%;left:50%;
 transform:translate(-50%,-50%);
-background:#111;padding:20px;border-radius:12px;
-display:none;width:300px
+background:#111;
+padding:20px;
+border-radius:16px;
+display:none;
+width:320px;
 }
-
-/* MAP */
-#map{height:400px;border-radius:12px}
 
 /* CHAT */
 .chat-btn{
-position:fixed;bottom:20px;right:20px;
-background:#007aff;padding:15px;border-radius:50%;
-cursor:pointer
+position:fixed;
+bottom:20px;
+right:20px;
+background:linear-gradient(135deg,#007aff,#00e0ff);
+padding:15px;
+border-radius:50%;
+cursor:pointer;
+box-shadow:0 0 20px rgba(0,122,255,0.5);
 }
 .chat{
-position:fixed;bottom:80px;right:20px;width:300px;
-background:#111;border-radius:12px;display:none
+position:fixed;
+bottom:80px;
+right:20px;
+width:320px;
+background:#111;
+border-radius:16px;
+display:none;
 }
-.chat-body{height:200px;overflow:auto;padding:10px}
-.msg{margin:5px;padding:8px;border-radius:10px}
+.chat-body{height:220px;overflow:auto;padding:10px}
+.msg{margin:6px;padding:10px;border-radius:12px}
 .user{background:#007aff}
-.bot{background:#222;color:#00ffcc}
+.bot{background:#222;color:#00e0ff}
+
+/* MAP */
+#map{height:350px;border-radius:12px}
 </style>
 </head>
 
@@ -79,30 +139,30 @@ background:#111;border-radius:12px;display:none
 <h2>EPAL</h2>
 <a onclick="show('dashboard',this)">Dashboard</a>
 <a onclick="show('clientes',this)">Clientes</a>
-<a onclick="show('funcionarios',this)">Funcionários</a>
 <a onclick="show('mapa',this)">Mapa</a>
 <a onclick="show('reclamacoes',this)">Reclamações</a>
 <a onclick="show('pagamentos',this)">Pagamentos</a>
-<a onclick="show('infra',this)">Infraestrutura</a>
 <a onclick="show('analytics',this)">Analytics</a>
 </div>
 
 <div class="main">
+
 <div class="topbar">
-<div>EPAL Digital Platform</div>
+<div>Digital Platform</div>
 <div>Online ●</div>
 </div>
 
 <div class="content" id="content"></div>
+
 </div>
 
 <div class="modal" id="modal"></div>
 
-<button class="chat-btn" onclick="toggleChat()">💬</button>
+<div class="chat-btn" onclick="toggleChat()">💬</div>
 
 <div class="chat" id="chat">
 <div class="chat-body" id="chatBody"></div>
-<input id="chatInput" placeholder="Mensagem..." style="width:70%">
+<input id="chatInput" placeholder="Pergunte algo..." style="width:70%">
 <button onclick="chat()">></button>
 </div>
 
@@ -110,10 +170,9 @@ background:#111;border-radius:12px;display:none
 
 <script>
 
-/* DATA */
 let clientes=[
 {nome:"João Manuel",bairro:"Talatona",consumo:"120L",status:"ok"},
-{nome:"Empresa ABC",bairro:"Viana",consumo:"850L",status:"warn"}
+{nome:"Empresa ABC",bairro:"Viana",consumo:"800L",status:"warn"}
 ];
 
 let reclamacoes=[];
@@ -128,10 +187,9 @@ if(m==="dashboard"){
 content.innerHTML=`
 <h1>Dashboard</h1>
 <div class="grid">
-<div class="card">Receita: 120M Kz</div>
-<div class="card">Perdas: 35M Kz</div>
-<div class="card">Clientes: ${clientes.length}</div>
-<div class="card">Reclamações: ${reclamacoes.length}</div>
+<div class="card"><div class="kpi">120M Kz</div>Receita</div>
+<div class="card"><div class="kpi">35M Kz</div>Perdas</div>
+<div class="card"><div class="kpi">${clientes.length}</div>Clientes</div>
 </div>`;
 }
 
@@ -139,7 +197,8 @@ content.innerHTML=`
 if(m==="clientes"){
 let html="<h1>Clientes</h1><div class='grid'>";
 clientes.forEach(c=>{
-html+=`<div class="card" onclick="perfil('${c.nome}','${c.bairro}','${c.consumo}')">
+html+=`
+<div class="card" onclick="perfil('${c.nome}','${c.bairro}','${c.consumo}')">
 <h3>${c.nome}</h3>
 <p>${c.bairro}</p>
 <span class="status ${c.status}">${c.status}</span>
@@ -149,47 +208,37 @@ html+="</div>";
 content.innerHTML=html;
 }
 
-/* FUNCIONÁRIOS */
-if(m==="funcionarios"){
-content.innerHTML=`
-<h1>Funcionários</h1>
-<div class="grid">
-<div class="card" onclick="perfil('CEO','Gestão','Full Access')">CEO</div>
-<div class="card">Diretor Técnico</div>
-</div>`;
-}
-
 /* MAPA */
 if(m==="mapa"){
-content.innerHTML=`<h1>Mapa</h1><div id="map"></div>`;
+content.innerHTML=`<h1>Mapa Inteligente</h1><div id="map"></div>`;
 setTimeout(()=>{
 let map=L.map('map').setView([-8.83,13.23],11);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-clientes.forEach(()=>{
-L.marker([-8.9+Math.random()/10,13.2+Math.random()/10]).addTo(map);
+clientes.forEach(c=>{
+L.marker([-8.9+Math.random()/10,13.2+Math.random()/10])
+.addTo(map).bindPopup(c.nome);
 });
 },100);
 }
 
 /* RECLAMAÇÕES */
 if(m==="reclamacoes"){
-renderReclamacoes();
+content.innerHTML=`
+<h1>Reclamações</h1>
+<div class="card">
+<input id="nome" placeholder="Nome">
+<input id="bairro" placeholder="Bairro">
+<textarea id="prob"></textarea>
+<button onclick="addRec()">Enviar</button>
+</div>`;
 }
 
-/* PAGAMENTOS */
+/* PAGAMENTO */
 if(m==="pagamentos"){
 content.innerHTML=`
 <h1>Pagamento</h1>
-<div class="card" onclick="alert('Pagamento aprovado')">Pagar Conta</div>`;
-}
-
-/* INFRA */
-if(m==="infra"){
-content.innerHTML=`
-<h1>Infraestrutura</h1>
-<div class="grid">
-<div class="card">ETA Kifangondo</div>
-<div class="card">Centro Talatona</div>
+<div class="card" onclick="alert('Pagamento efetuado')">
+💳 Pagar Conta
 </div>`;
 }
 
@@ -198,59 +247,37 @@ if(m==="analytics"){
 content.innerHTML=`
 <h1>Analytics</h1>
 <div class="grid">
-<div class="card">Eficiência: 78%</div>
-<div class="card">Consumo médio: 120L</div>
+<div class="card">Eficiência 78%</div>
+<div class="card">Consumo Médio 120L</div>
 </div>`;
 }
 }
 
-/* PERFIL MODAL */
+/* PERFIL */
 function perfil(n,b,c){
 modal.innerHTML=`<h2>${n}</h2><p>${b}</p><p>${c}</p>
 <button onclick="modal.style.display='none'">Fechar</button>`;
 modal.style.display="block";
 }
 
-/* RECLAMAÇÕES */
-function renderReclamacoes(){
-let html=`
-<h1>Reclamações</h1>
-<div class="card">
-<input id="nome" placeholder="Nome">
-<input id="bairro" placeholder="Bairro">
-<textarea id="problema"></textarea>
-<button onclick="addRec()">Enviar</button>
-</div>
-`;
-reclamacoes.forEach(r=>{
-html+=`<div class="card">${r.nome} - ${r.status}</div>`;
-});
-content.innerHTML=html;
-}
-
+/* RECLAMAÇÃO */
 function addRec(){
-reclamacoes.push({
-nome:document.getElementById("nome").value,
-status:"Pendente"
-});
-renderReclamacoes();
+alert("Reclamação enviada com sucesso");
 }
 
 /* CHAT */
 function toggleChat(){
-chat.style.display = chat.style.display==="none"?"block":"none";
+chat.style.display=chat.style.display==="none"?"block":"none";
 }
 
 function chat(){
-let txt=chatInput.value.toLowerCase();
-let resp="Estamos a analisar.";
-
-if(txt.includes("água")) resp="Manutenção em curso.";
-if(txt.includes("pagar")) resp="Use o módulo Pagamentos.";
-if(txt.includes("reclama")) resp="Use o módulo Reclamações.";
-
+let txt=chatInput.value;
 addMsg(txt,'user');
-addMsg(resp,'bot');
+
+setTimeout(()=>{
+addMsg("Estamos a verificar sua solicitação.","bot");
+},600);
+
 chatInput.value="";
 }
 
