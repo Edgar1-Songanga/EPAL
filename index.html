@@ -4,11 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>EPAL Digital Platform</title>
+<title>EPAL Digital Experience 2026</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-
-<!-- LEAFLET -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
 <style>
@@ -17,284 +15,230 @@ body{
   font-family:'Inter',sans-serif;
   background:#0b0f14;
   color:white;
+  overflow:hidden;
+}
+
+/* LANDING */
+.landing{
+  position:fixed;
+  width:100%;
+  height:100vh;
   display:flex;
+  justify-content:center;
+  align-items:center;
+  background:url('https://images.unsplash.com/photo-1581091215363-0b593b9a1e9f?auto=format&fit=crop&w=1600&q=80') center/cover;
+  z-index:10;
+  flex-direction:column;
+}
+.landing h1{
+  font-size:48px;
+  backdrop-filter: blur(10px);
+}
+.landing button{
+  padding:15px 30px;
+  margin-top:20px;
+  background:#00ffcc;
+  border:none;
+  cursor:pointer;
+}
+
+/* LAYOUT */
+.app{
+  display:flex;
+  height:100vh;
 }
 
 /* SIDEBAR */
 .sidebar{
   width:260px;
   background:rgba(10,15,20,0.95);
-  backdrop-filter: blur(15px);
-  height:100vh;
+  backdrop-filter: blur(20px);
   padding:20px;
-  position:fixed;
-}
-.sidebar h2{
-  color:#00ffcc;
 }
 .sidebar a{
   display:block;
-  margin:15px 0;
+  margin:12px 0;
   color:#aaa;
-  text-decoration:none;
-  transition:0.3s;
+  cursor:pointer;
 }
-.sidebar a:hover{
-  color:#00ffcc;
-  transform:translateX(5px);
-}
+.sidebar a:hover{color:#00ffcc}
 
 /* MAIN */
 .main{
-  margin-left:260px;
-  width:100%;
+  flex:1;
+  overflow:auto;
+  padding:20px;
 }
 
-/* TOPBAR */
-.topbar{
-  background:rgba(0,0,0,0.6);
-  backdrop-filter: blur(10px);
-  padding:15px 30px;
-  display:flex;
-  justify-content:space-between;
-  position:sticky;
-  top:0;
-  z-index:5;
+/* CARDS */
+.card{
+  background:rgba(20,30,45,0.8);
+  padding:20px;
+  border-radius:16px;
+  margin:10px;
+  cursor:pointer;
+  transition:0.4s;
 }
-
-/* HERO */
-.hero{
-  height:60vh;
-  background:linear-gradient(rgba(0,40,80,0.5), rgba(0,40,80,0.6)),
-  url('https://images.unsplash.com/photo-1581091215363-0b593b9a1e9f?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
-  display:flex;
-  align-items:center;
-  padding:40px;
-}
-.hero h1{
-  font-size:42px;
-}
-
-/* SECTION */
-.section{
-  padding:60px 30px;
+.card:hover{
+  transform:scale(1.05) rotateX(3deg);
 }
 
 /* GRID */
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:20px;
 }
 
-/* CARD */
-.card{
-  background:rgba(20,30,45,0.9);
-  border-radius:16px;
+/* MODALS */
+.modal{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  background:#111;
   padding:20px;
-  backdrop-filter: blur(10px);
-  transition:0.4s;
-}
-.card:hover{
-  transform:translateY(-10px) scale(1.03);
-}
-
-/* AVATAR */
-.avatar{
-  width:60px;
-  height:60px;
-  border-radius:50%;
+  display:none;
 }
 
 /* MAP */
-#map{
-  height:400px;
+#map{height:400px}
+
+/* CHAT */
+.chat{
+  position:fixed;
+  bottom:10px;
+  right:10px;
+  width:300px;
+  background:#111;
   border-radius:16px;
 }
-
-/* CHATBOT */
-.chatbot{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  width:320px;
-  background:#111;
-  border-radius:20px;
-  overflow:hidden;
-  box-shadow:0 10px 40px rgba(0,0,0,0.7);
-}
-
-.chat-header{
-  background:#007aff;
-  padding:10px;
-  text-align:center;
-}
-
-.chat-body{
-  height:250px;
-  overflow:auto;
-  padding:10px;
-}
-
-.msg{
-  margin:8px 0;
-  padding:10px;
-  border-radius:14px;
-  max-width:70%;
-}
-.user{background:#007aff;margin-left:auto;}
-.bot{background:#222;color:#00ffcc;}
-
-.chat-input{
-  display:flex;
-}
-.chat-input input{
-  flex:1;
-  padding:10px;
-  border:none;
-  background:#111;
-  color:white;
-}
-.chat-input button{
-  background:#007aff;
-  border:none;
-  color:white;
-  padding:10px;
-}
+.chat-body{height:200px;overflow:auto;padding:10px;}
+.msg{margin:5px;padding:8px;border-radius:10px;}
+.user{background:#007aff}
+.bot{background:#222;color:#00ffcc}
 </style>
 </head>
 
 <body>
 
-<!-- SIDEBAR -->
+<div class="landing" id="landing">
+<h1>EPAL DIGITAL EXPERIENCE</h1>
+<button onclick="start()">Entrar</button>
+</div>
+
+<div class="app" id="app" style="display:none">
+
 <div class="sidebar">
-  <h2>EPAL</h2>
-  <a href="#funcionarios">Funcionários</a>
-  <a href="#clientes">Clientes</a>
-  <a href="#mapa">Mapa</a>
-  <a href="#financeiro">Financeiro</a>
+<h2>EPAL</h2>
+<a onclick="show('dashboard')">Dashboard</a>
+<a onclick="show('clientes')">Clientes</a>
+<a onclick="show('funcionarios')">Funcionários</a>
+<a onclick="show('mapa')">Mapa</a>
+<a onclick="show('pagamentos')">Pagamentos</a>
+<a onclick="show('reclamacoes')">Reclamações</a>
+<a onclick="show('infra')">Infraestrutura</a>
 </div>
 
-<!-- MAIN -->
-<div class="main">
-
-<div class="topbar">
-  <div>Infraestrutura Digital</div>
-  <div>Powered by Magestade Pura Digital</div>
-</div>
-
-<div class="hero">
-  <h1>Gestão Inteligente de Água em Luanda</h1>
-</div>
-
-<!-- FUNCIONÁRIOS -->
-<div class="section" id="funcionarios">
-<h2>Funcionários</h2>
-<div class="grid" id="funcionariosGrid"></div>
-</div>
-
-<!-- CLIENTES -->
-<div class="section" id="clientes">
-<h2>Clientes</h2>
-<div class="grid" id="clientesGrid"></div>
-</div>
-
-<!-- MAPA REAL -->
-<div class="section" id="mapa">
-<h2>Mapa de Abastecimento</h2>
-<div id="map"></div>
-</div>
+<div class="main" id="content"></div>
 
 </div>
 
-<!-- CHATBOT -->
-<div class="chatbot">
-<div class="chat-header">Assistente EPAL</div>
+<div class="chat">
 <div class="chat-body" id="chatBody"></div>
-<div class="chat-input">
-<input id="input">
-<button onclick="send()">Enviar</button>
-</div>
+<input id="chatInput" placeholder="Fale..." style="width:70%">
+<button onclick="chat()">></button>
 </div>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <script>
-// FUNCIONÁRIOS
-const funcionarios=[
-{nome:"Edgar Songanga",cargo:"CEO"},
-{nome:"Jeniusa Prata",cargo:"Diretora"},
-{nome:"Miguel Santos",cargo:"Engenheiro"}
-];
 
-const fGrid=document.getElementById("funcionariosGrid");
-funcionarios.forEach(f=>{
-let div=document.createElement("div");
-div.className="card";
-div.innerHTML=`<img class="avatar" src="https://i.pravatar.cc/60">
-<h3>${f.nome}</h3>
-<p>${f.cargo}</p>`;
-fGrid.appendChild(div);
-});
-
-// CLIENTES
-const clientes=[
-{nome:"João Manuel",bairro:"Talatona"},
-{nome:"Maria Silva",bairro:"Kilamba"},
-{nome:"Empresa ABC",bairro:"Viana"}
-];
-
-const cGrid=document.getElementById("clientesGrid");
-clientes.forEach(c=>{
-let div=document.createElement("div");
-div.className="card";
-div.innerHTML=`<img class="avatar" src="https://i.pravatar.cc/60">
-<h3>${c.nome}</h3>
-<p>${c.bairro}</p>`;
-cGrid.appendChild(div);
-});
-
-// MAPA REAL
-const map=L.map('map').setView([-8.8383,13.2344],11);
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-maxZoom:19
-}).addTo(map);
-
-// PINS REAIS
-[
-{nome:"Talatona",coords:[-8.919,13.180]},
-{nome:"Viana",coords:[-8.890,13.370]},
-{nome:"Kilamba",coords:[-8.950,13.300]}
-].forEach(p=>{
-L.marker(p.coords).addTo(map)
-.bindPopup(`Zona: ${p.nome}<br>Abastecimento ativo`);
-});
-
-// CHAT
-let chat=[];
-function send(){
-let input=document.getElementById("input");
-if(!input.value) return;
-
-chat.push({type:"user",text:input.value});
-chat.push({type:"bot",text:"Estamos a analisar sua solicitação"});
-
-render();
-input.value="";
+function start(){
+document.getElementById("landing").style.display="none";
+document.getElementById("app").style.display="flex";
+show('dashboard');
 }
 
-function render(){
+function show(module){
+let c=document.getElementById("content");
+
+if(module==="dashboard"){
+c.innerHTML=`<h1>Dashboard</h1><div class="grid">
+<div class="card">Receita: 120M Kz</div>
+<div class="card">Perdas: 35M Kz</div>
+</div>`;
+}
+
+if(module==="clientes"){
+c.innerHTML=`<h1>Clientes</h1><div class="grid">
+<div class="card" onclick="profile('João')">João Manuel</div>
+<div class="card" onclick="profile('Empresa ABC')">Empresa ABC</div>
+</div>`;
+}
+
+if(module==="funcionarios"){
+c.innerHTML=`<h1>Funcionários</h1><div class="grid">
+<div class="card" onclick="profile('CEO')">CEO</div>
+</div>`;
+}
+
+if(module==="mapa"){
+c.innerHTML=`<h1>Mapa</h1><div id="map"></div>`;
+setTimeout(()=>{
+let map=L.map('map').setView([-8.83,13.23],11);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+L.marker([-8.9,13.2]).addTo(map).bindPopup("Talatona");
+},100);
+}
+
+if(module==="pagamentos"){
+c.innerHTML=`<h1>Pagamento</h1>
+<div class="card" onclick="alert('Pagamento simulado com sucesso')">Pagar Conta</div>`;
+}
+
+if(module==="reclamacoes"){
+c.innerHTML=`<h1>Reclamação</h1>
+<div class="card" onclick="alert('Reclamação enviada')">Reportar Problema</div>`;
+}
+
+if(module==="infra"){
+c.innerHTML=`<h1>Infraestrutura</h1>
+<div class="grid">
+<div class="card">ETA Kifangondo</div>
+<div class="card">Rede de Distribuição</div>
+</div>`;
+}
+}
+
+function profile(name){
+alert("Abrir perfil: "+name);
+}
+
+/* CHAT */
+let chatData=[
+"Olá, como posso ajudar?",
+"Estamos a verificar sua área",
+"Sua reclamação foi registada"
+];
+
+function chat(){
+let input=document.getElementById("chatInput");
 let body=document.getElementById("chatBody");
-body.innerHTML="";
-chat.forEach(m=>{
-let d=document.createElement("div");
-d.className="msg "+m.type;
-d.innerText=m.text;
-body.appendChild(d);
-});
+
+let u=document.createElement("div");
+u.className="msg user";
+u.innerText=input.value;
+body.appendChild(u);
+
+let b=document.createElement("div");
+b.className="msg bot";
+b.innerText=chatData[Math.floor(Math.random()*chatData.length)];
+body.appendChild(b);
+
+input.value="";
 body.scrollTop=body.scrollHeight;
 }
+
 </script>
 
 </body>
